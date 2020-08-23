@@ -1,15 +1,22 @@
 # Treeify
 
-## How to run this
-
+## Installing dependencies
 ```bash
-// clone repo
-yarn install
-yarn jest
+# install all dependencies
+cd Treeify && yarn install
+
+# run tests to see everything is working
+# Tests are being run only from src/
+yarn test
 ```
 
-## Errors
+## Building
+This will create dist/ file, where files are compiled using babel
+```bash
+yarn build
+```
 
+## Common Errors
 ### Error: ENOSPC: System limit for number of file watchers reached
 Solution
 ```bash
