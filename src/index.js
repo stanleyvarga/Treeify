@@ -2,7 +2,7 @@
 // Algorithm customized from 
 // https://stackoverflow.com/questions/22367711/construct-hierarchy-tree-from-flat-list-with-parent-field/22367819#22367819
 export function treeify(listNodes) {
-  listNodes = prepareListNodes(listNodes)
+  listNodes = parentify(listNodes)
   let tree = []
   let lookup = lookupFrom(listNodes)
 
@@ -34,7 +34,7 @@ export function treeify(listNodes) {
 // This way, creating tree becomes O(N) 
 // And preparing Node list (M*N), but as M will never be higher than 10
 // This could be considered O(N)-ish
-export function prepareListNodes(fileList)  {
+export function parentify(fileList)  {
   // Lookup here serves only to skip duplicate directory nodes
   let lookup = {}
   let list = []

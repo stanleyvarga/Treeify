@@ -1,4 +1,4 @@
-import { hashCode, treeify, prepareListNodes, tree2Json, trimSlashes,  splitPath } from './index'
+import { hashCode, treeify, parentify, tree2Json, trimSlashes,  splitPath } from './index'
 
 const currentDate = 1598016948357
 const mr_robot_ep1s0d3s = [
@@ -16,9 +16,9 @@ const mr_robot_ep1s0d3s = [
 
 
 describe("Directory Parser", () => {
-  describe("prepareListNodes", () => {
+  describe("Parentify", () => {
     test("Should create list of directories and files", () => {
-      const List = prepareListNodes( [
+      const List = parentify( [
         {name: "eps1.0_hellofriend", size: 765000000, date: currentDate, path: "home/videos", "ext": "mov" },
         {name: "eps1.1_ones-and-zer0es", size: 724004488, date: currentDate, path: "home/videos", "ext": "mpeg" }
       ])
@@ -60,13 +60,13 @@ describe("Directory Parser", () => {
     })
     
     test("Should create empty list from empty fileList", () => {
-      const List = prepareListNodes([])
+      const List = parentify([])
       expect(List).toHaveLength(0)
       expect(List).toStrictEqual([])
     })
 
     test("Should properly parse paths like '/'", () => {
-      const List = prepareListNodes([
+      const List = parentify([
         {name: "eps1.0_hellofriend", size: 765000000, date: currentDate, path: "/", "ext": "mov" },
       ])
       const IDPath = hashCode('/')
@@ -91,7 +91,7 @@ describe("Directory Parser", () => {
     })
 
     test("Should properly parse paths like '/videos'", () => {
-      const List = prepareListNodes([
+      const List = parentify([
         {name: "eps1.0_hellofriend", size: 765000000, date: currentDate, path: "/videos", "ext": "mov" },
       ])
       const IDPath = hashCode('videos')
@@ -116,7 +116,7 @@ describe("Directory Parser", () => {
     })
 
     test("Should properly parse empty paths like ''", () => {
-      const List = prepareListNodes([
+      const List = parentify([
         {name: "eps1.0_hellofriend", size: 765000000, date: currentDate, path: "/", "ext": "mov" },
       ])
       const IDPath = hashCode('/')
@@ -141,7 +141,7 @@ describe("Directory Parser", () => {
     })
 
     test("Should properly handle duplicates'", () => {
-      const List = prepareListNodes([
+      const List = parentify([
         {name: "eps1.0_hellofriend", size: 765000000, date: 1, path: "videos", ext: "mov" },
         {name: "eps1.0_hellofriend", size: 765000000, date: 1, path: "videos", ext: "mov" }
       ])

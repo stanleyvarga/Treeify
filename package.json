@@ -4,9 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest --watchAll --coverage --verbose"
+    "test": "jest src/ --watch --coverage --verbose",
+    "build": "yarn babel src/ --out-dir dist"
   },
   "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.4",
     "@babel/node": "^7.10.5",
     "@babel/preset-env": "^7.11.0",
     "@types/jest": "^26.0.10",
