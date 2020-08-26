@@ -8,7 +8,6 @@ import {
 // Algorithm customized from 
 // https://stackoverflow.com/questions/22367711/construct-hierarchy-tree-from-flat-list-with-parent-field/22367819#22367819
 export function treeify(listNodes) {
-  listNodes = parentify(listNodes)
   let tree = []
   let lookup = lookupFrom(listNodes)
 
@@ -35,52 +34,63 @@ export function treeify(listNodes) {
   return tree
 }
 
-// In order to properly parse tree, List of Nodes is created
-// With all necessary relationships to parent nodes
-// This way, creating tree becomes O(N) 
-// And preparing Node list (M*N), but as M will never be higher than 10
-// This could be considered O(N)-ish
-export function parentify(nodeList)  {
+/*
+  * Creates relationships to nodes
+  * e.g.: path 'A/B/3' becomes
+  * const list = [{id: 'A': parent: null}, {id: 'B', parent: 'A'}, {id: '3', parent: 'B'}]
+  * treeify(list) becomes: 
+  *      A
+  *     /
+  *    B 
+  *   /  
+  *  3
+  * 
+  * Another node could have path like 'A/B/C' and another 'A/B/D'
+  * const list = [{id: 'A': parent: null}, {id: 'B', parent: 'A'}, {id: 'C', parent: 'B'}, {id: 'D', parent: 'B'}]
+  * treeify(list) becomes: N-Ary Tree
+  *        A
+  *      /
+  *     B
+  *   / | \ 
+  *  3  D  C
+*/
+export function parentify(list)  {
   // Lookup here serves only to skip duplicate directory nodes
   let lookup = {}
-  let parentifiedList = []
-
-  // Every single node in nodeList is relative to null / '/' / 'root'
-  // e.g.: same parent
+  // Every single node in list is relative to 
+  // either null or '/' or 'root' e.g.: same parent
+  // TODO: custom root node type
   let parent = null
-
-  for(let node of nodeList) {
-    let nodeID = hashCode(node.name)
-    // Looping left to right, we first set parent to be the left most element
-    // like 'home/videos/movies/mr-robot' 
-    // parent to videos is home, to movies is videos, to mr-robot is movies..etc
+  let parentifiedList = []
+  
+  for(let node of list) {
     let pathArr = splitPath(node.path)
-    for(let directory of pathArr) {
+    for(let pathNode of pathArr) {
 
-      let parentID = hashCode(directory)
-      // List skips duplicates, save only distinct nodes 
+      let parentID = hashCode(pathNode)
       if(lookup[parentID] === undefined) {
-        lookup[parentID] = directory
+
+        lookup[parentID] = parentID
         parentifiedList.push({
           id: parentID,
-          title: directory,
+          label: pathNode,
           parent: parent
         })
       }
+
       parent = parentID
     }
 
     // Now that parent exists, files can be pushed 
     // and skip duplicates
+    let nodeID = hashCode(node.name)
     if(lookup[nodeID] === undefined) {
-      lookup[nodeID] = node
-      // trim slashes from paths like '/video'
+
+      lookup[nodeID] = nodeID
       let nodePath = trimSlashes(node.path)
       parentifiedList.push({
         id: hashCode(node.name),
-        // 'path' will be left out
         ...objectWithoutKey('path', node),
-        // trimmed path appended
         path: nodePath,
         parent: parent
       })
