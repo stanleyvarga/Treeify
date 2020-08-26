@@ -1,4 +1,5 @@
-import { hashCode, treeify, parentify, tree2Json, trimSlashes,  splitPath } from './index'
+import { treeify, parentify } from './index'
+import { hashCode } from './utils'
 
 const currentDate = 1598016948357
 const mr_robot_ep1s0d3s = [
@@ -14,6 +15,16 @@ const mr_robot_ep1s0d3s = [
   {name: "eps1.8_m1rr0r1ng",        size: 49116514,   date: currentDate, path: "var/etc/logs",         ext: "qt" }, 
 ]
 
+const someList = [
+  {
+    path: 'home/downloads/videos/mR_rob0t',
+    name: "eps1.7_wh1ter0se", size: 98845568, date: currentDate, ext: "m4v"
+  },
+  {
+    path: '100/2',
+    name: "eps1.7_wh1ter0se", size: 98845568, date: currentDate, ext: "m4v"
+  },
+]
 
 describe("Directory Parser", () => {
   describe("Parentify", () => {
@@ -167,7 +178,7 @@ describe("Directory Parser", () => {
     })
   })
 
-  describe("treeify", () => {
+  describe("Treeify", () => {
     test("returns generated tree from listified list", () => {
       const Tree = treeify( [
       {name: "eps1.0_hellofriend", size: 765000000, date: currentDate, path: "home/videos", "ext": "mov" },
@@ -392,81 +403,6 @@ describe("Directory Parser", () => {
           files: []
         }
       ])
-    })
-  })
-
-  describe("trimSlashes", () => {
-    test("trims slashes from left", () => {
-      const trimmed = trimSlashes('/home')
-      expect(trimmed).toEqual('home')
-    })
-
-    test("trims slashes from right", () => {
-      const trimmed = trimSlashes('home/')
-      expect(trimmed).toEqual('home')
-    })
-
-    test("trims slashes from left and right", () => {
-      const trimmed = trimSlashes('/home/pics/rick-and-morty/')
-      expect(trimmed).toEqual('home/pics/rick-and-morty')
-    })
-  })
-
-  describe("splitPath", () => {
-    test("splits path without trailing slashes", () => {
-      const splitted = splitPath('home/videos')
-
-      expect(splitted).toHaveLength(2)
-      expect(splitted).toStrictEqual([
-        'home', 'videos'
-      ])
-    })
-
-    test("splits path with left trailing slashes, nested dirs", () => {
-      const splitted = splitPath('/app/coverage')
-
-      expect(splitted).toHaveLength(2)
-      expect(splitted).toStrictEqual([
-        'app', 'coverage'
-      ])
-    })
-
-    test("splits path with right trailing slashes, nested dirs", () => {
-      const splitted = splitPath('app/coverage/')
-
-      expect(splitted).toHaveLength(2)
-      expect(splitted).toStrictEqual([
-        'app', 'coverage'
-      ])
-    })
-
-    test("splits path with left trailing slashes and single dir", () => {
-      const splitted = splitPath('/coverage')
-
-      expect(splitted).toHaveLength(1)
-      expect(splitted).toStrictEqual(['coverage'
-      ])
-    })
-
-    test("splits path with right trailing slashes and single dir", () => {
-      const splitted = splitPath('coverage/')
-
-      expect(splitted).toHaveLength(1)
-      expect(splitted).toStrictEqual(['coverage'])
-    })
-
-    test("splits path with input '/'", () => {
-      const splitted = splitPath('/')
-
-      expect(splitted).toHaveLength(1)
-      expect(splitted).toStrictEqual('/')
-    })
-
-    test("returns empty array of string for empty path", () => {
-      const splitted = splitPath('')
-
-      expect(splitted).toHaveLength(1)
-      expect(splitted).toStrictEqual('/')
     })
   })
 })
